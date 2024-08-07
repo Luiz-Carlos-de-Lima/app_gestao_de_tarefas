@@ -8,6 +8,5 @@ class SplashModule extends Module {
   void routes(r) {
     r.child('/', child: (contex) => const SplashPage());
     r.module(Routers.login, module: LoginModule());
-    r.module(Routers.register, module: LoginModule());
   }
 }

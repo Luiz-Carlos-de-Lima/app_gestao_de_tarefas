@@ -1,3 +1,4 @@
+import 'package:app_gestao_de_tarefas/app/core/ui/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 class CustomFormField extends StatefulWidget {
@@ -26,45 +27,47 @@ class _CustomFormFieldState extends State<CustomFormField> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: obscure,
-        builder: (context, _) {
-          return SizedBox(
-            child: TextFormField(
-              expands: false,
-              controller: widget.controller,
-              obscureText: obscure.value,
-              focusNode: widget.focusNode,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.all(15),
-                isCollapsed: true,
-                isDense: true,
-                hintText: widget.labelText,
-                suffixIcon: widget.enableSwapObscure
-                    ? IconButton(
-                        onPressed: () {
-                          obscure.value = !obscure.value;
-                        },
-                        icon: Icon(
-                          obscure.value ? Icons.visibility_off_rounded : Icons.visibility_rounded,
-                        ),
-                      )
-                    : null,
-                hintStyle: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(width: 2),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(width: 2),
-                ),
+      animation: obscure,
+      builder: (context, _) {
+        return SizedBox(
+          child: TextFormField(
+            expands: false,
+            controller: widget.controller,
+            obscureText: obscure.value,
+            focusNode: widget.focusNode,
+            style: TextStyle(color: context.onBackground),
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.all(15),
+              isCollapsed: true,
+              isDense: true,
+              hintText: widget.labelText,
+              suffixIcon: widget.enableSwapObscure
+                  ? IconButton(
+                      onPressed: () {
+                        obscure.value = !obscure.value;
+                      },
+                      icon: Icon(
+                        obscure.value ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                      ),
+                    )
+                  : null,
+              hintStyle: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
               ),
-              validator: widget.validator,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(width: 2),
+              ),
             ),
-          );
-        });
+            validator: widget.validator,
+          ),
+        );
+      },
+    );
   }
 }

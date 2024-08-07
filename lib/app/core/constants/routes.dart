@@ -1,7 +1,7 @@
 sealed class Routers {
   static String initialRoute = '/';
-  static String login = 'auth/login';
-  static String register = 'auth/register';
-  static String home = '/home';
-  static String tasksCreate = '/tasks/create';
+  static String login = '/login/';
+  static String register = './register/';
+  static String home = '/home/';
+  static String tasksCreate = '/tasks/create/';
 }
