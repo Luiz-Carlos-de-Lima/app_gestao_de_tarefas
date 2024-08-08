@@ -12,9 +12,13 @@ abstract class LoginStoreBase with Store {
   final userService = Modular.get<UserServiceImpl>();
 
   @readonly
-  bool _isLoged = false;
+  bool _isLogged = false;
 
   Future<void> login({required String email, required String password}) async {
     User? user = await userService.login(email: email, password: password);
+
+    if (user != null) {
+      _isLogged = true;
+    }
   }
 }

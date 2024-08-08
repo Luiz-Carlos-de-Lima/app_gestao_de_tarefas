@@ -1,4 +1,5 @@
 import 'package:app_gestao_de_tarefas/app/core/constants/routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -16,7 +17,12 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Modular.to.pushReplacementNamed(Routers.login);
+      final firebase = FirebaseAuth.instance;
+      if (firebase.currentUser != null) {
+        Modular.to.pushReplacementNamed(Routers.home);
+      } else {
+        Modular.to.pushReplacementNamed(Routers.login);
+      }
     });
   }
 

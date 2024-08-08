@@ -5,6 +5,7 @@ import 'package:app_gestao_de_tarefas/app/modules/auth/login/login_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:mobx/mobx.dart';
 import 'package:validatorless/validatorless.dart';
 
 import '../../../core/exceptions/auth_exception.dart';
@@ -24,6 +25,16 @@ class _LoginPageState extends State<LoginPage> {
   final _emailEC = TextEditingController();
   final _passwordEC = TextEditingController();
   final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    reaction((_) => _store.isLogged, (logged) {
+      if (logged) {
+        Modular.to.pushReplacementNamed(Routers.home);
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

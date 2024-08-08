@@ -1,5 +1,6 @@
 import 'package:app_gestao_de_tarefas/app/core/constants/routes.dart';
 import 'package:app_gestao_de_tarefas/app/modules/auth/login/login_module.dart';
+import 'package:app_gestao_de_tarefas/app/modules/home/home_module.dart';
 import 'package:app_gestao_de_tarefas/app/modules/splash/splash_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -8,5 +9,6 @@ class SplashModule extends Module {
   void routes(r) {
     r.child('/', child: (contex) => const SplashPage());
     r.module(Routers.login, module: LoginModule());
+    r.module(Routers.home, module: HomeModule());
   }
 }
