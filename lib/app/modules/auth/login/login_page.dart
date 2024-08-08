@@ -10,7 +10,7 @@ import 'package:validatorless/validatorless.dart';
 
 import '../../../core/exceptions/auth_exception.dart';
 import '../../../core/ui/helper/messages.dart';
-import '../../../core/ui/widgets/todo_list_logo.dart';
+import '../../../core/ui/widgets/logo_widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

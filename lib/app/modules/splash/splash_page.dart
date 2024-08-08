@@ -2,7 +2,7 @@ import 'package:app_gestao_de_tarefas/app/core/listeners/Firebase_listener.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../core/ui/widgets/todo_list_logo.dart';
+import '../../core/ui/widgets/logo_widget.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
