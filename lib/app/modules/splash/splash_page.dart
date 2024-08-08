@@ -1,9 +1,8 @@
-import 'package:app_gestao_de_tarefas/app/core/constants/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_gestao_de_tarefas/app/core/listeners/Firebase_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../core/widgets/todo_list_logo.dart';
+import '../../core/ui/widgets/todo_list_logo.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -17,12 +16,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final firebase = FirebaseAuth.instance;
-      if (firebase.currentUser != null) {
-        Modular.to.pushReplacementNamed(Routers.home);
-      } else {
-        Modular.to.pushReplacementNamed(Routers.login);
-      }
+      Modular.get<FirebaseListener>().loadListerner();
     });
   }
 

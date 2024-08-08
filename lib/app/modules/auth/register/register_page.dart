@@ -1,15 +1,15 @@
-import 'package:app_gestao_de_tarefas/app/core/ui/theme_extension.dart';
-import 'package:app_gestao_de_tarefas/app/core/widgets/custom_form_field.dart';
+import 'package:app_gestao_de_tarefas/app/core/ui/extensions/theme_extension.dart';
+import 'package:app_gestao_de_tarefas/app/core/ui/helper/loader.dart';
+import 'package:app_gestao_de_tarefas/app/core/ui/widgets/custom_form_field.dart';
 import 'package:app_gestao_de_tarefas/app/modules/auth/register/register_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:mobx/mobx.dart';
 import 'package:validatorless/validatorless.dart';
 
-import '../../../core/constants/routes.dart';
 import '../../../core/exceptions/auth_exception.dart';
-import '../../../core/ui/messages.dart';
-import '../../../core/widgets/todo_list_logo.dart';
+import '../../../core/ui/helper/messages.dart';
+import '../../../core/ui/widgets/todo_list_logo.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -18,13 +18,28 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> with Loader {
   final _store = Modular.get<RegisterStore>();
   final _formKey = GlobalKey<FormState>();
   final _emailEC = TextEditingController();
   final _passwordEC = TextEditingController();
   final _confirmPasswordEC = TextEditingController();
   final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    reaction((_) => _store.statusLoader, (status) {
+      switch (status) {
+        case LoaderStatus.loading:
+          showLoader();
+          break;
+        default:
+          hideLoader();
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 bool formIsValid = _formKey.currentState?.validate() ?? false;
 
                                 if (formIsValid) {
-                                  Loader.show(context);
+                                  _store.showLoader();
                                   await _store.register(email: _emailEC.text, password: _passwordEC.text);
                                 }
                               } on AuthException catch (e) {
@@ -112,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   Messages.of(context).showError('Ocorreu um erro desconhecido ao tentar registrar');
                                 }
                               } finally {
-                                Loader.hide();
+                                _store.hideLoader();
                               }
                             },
                             style: ElevatedButton.styleFrom(

@@ -1,4 +1,4 @@
-import 'package:app_gestao_de_tarefas/app/core/ui/theme_extension.dart';
+import 'package:app_gestao_de_tarefas/app/core/ui/extensions/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:notify_inapp/notify_inapp.dart';

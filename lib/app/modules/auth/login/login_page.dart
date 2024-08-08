@@ -1,16 +1,16 @@
 import 'package:app_gestao_de_tarefas/app/core/constants/routes.dart';
-import 'package:app_gestao_de_tarefas/app/core/ui/theme_extension.dart';
-import 'package:app_gestao_de_tarefas/app/core/widgets/custom_form_field.dart';
+import 'package:app_gestao_de_tarefas/app/core/ui/extensions/theme_extension.dart';
+import 'package:app_gestao_de_tarefas/app/core/ui/helper/loader.dart';
+import 'package:app_gestao_de_tarefas/app/core/ui/widgets/custom_form_field.dart';
 import 'package:app_gestao_de_tarefas/app/modules/auth/login/login_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validatorless/validatorless.dart';
 
 import '../../../core/exceptions/auth_exception.dart';
-import '../../../core/ui/messages.dart';
-import '../../../core/widgets/todo_list_logo.dart';
+import '../../../core/ui/helper/messages.dart';
+import '../../../core/ui/widgets/todo_list_logo.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with Loader {
   final _store = Modular.get<LoginStore>();
   final _formKey = GlobalKey<FormState>();
   final _emailEC = TextEditingController();
@@ -28,11 +28,17 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    reaction((_) => _store.isLogged, (logged) {
-      if (logged) {
-        Modular.to.pushReplacementNamed(Routers.home);
+    reaction((_) => _store.statusLoader, (status) {
+      switch (status) {
+        case LoaderStatus.loading:
+          showLoader();
+          break;
+        default:
+          hideLoader();
+          break;
       }
     });
+
     super.initState();
   }
 
@@ -87,12 +93,24 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             TextButton(
                                 onPressed: () async {
-                                  if (_emailEC.text.isEmpty) {
-                                    _focusNode.requestFocus();
-                                    Messages.of(context).showError('Digite um e-mail para recuperar a senha');
+                                  try {
+                                    if (_emailEC.text.isEmpty) {
+                                      _focusNode.requestFocus();
+                                      Messages.of(context).showInfo('Digite um e-mail para recuperar a senha');
+                                      return;
+                                    }
+                                    _store.showLoader();
+                                    await _store.recoverPassword(email: _emailEC.text);
+                                    if (context.mounted) {
+                                      Messages.of(context).showSuccess('E-mail para recuperar a senha enviado.');
+                                    }
+                                  } on AuthException catch (e) {
+                                    if (context.mounted) {
+                                      Messages.of(context).showError(e.message);
+                                    }
+                                  } finally {
+                                    _store.hideLoader();
                                   }
-
-                                  // await context.read<LoginController>().recoverPassword(email: _emailEC.text);
                                 },
                                 child: const Text('Esqueceu sua senha?')),
                             ElevatedButton(
@@ -101,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                                   bool formIsValid = _formKey.currentState?.validate() ?? false;
 
                                   if (formIsValid) {
-                                    Loader.show(context);
+                                    _store.showLoader();
                                     await _store.login(email: _emailEC.text, password: _passwordEC.text);
                                   }
                                 } on AuthException catch (e) {
@@ -113,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Messages.of(context).showError('Ocorreu um erro desconhecido ao tentar fazer o login');
                                   }
                                 } finally {
-                                  Loader.hide();
+                                  _store.hideLoader();
                                 }
                               },
                               style: ElevatedButton.styleFrom(

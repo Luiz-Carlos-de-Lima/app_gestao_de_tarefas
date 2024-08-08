@@ -56,19 +56,15 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> recoverPassword({required String email}) async {
     try {
-      final loginTypes = await _firebaseAuth.fetchSignInMethodsForEmail(email);
-
-      if (loginTypes.contains('password')) {
-        await _firebaseAuth.sendPasswordResetEmail(email: email);
-      } else {
-        throw AuthException(message: 'E-mail não cadastrado.');
-      }
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e, s) {
       log(e.toString());
       log(s.toString());
 
       if (e.code == 'user-not-found') {
         throw AuthException(message: 'Usuário não encontrado, Para continuar cadastre-se');
+      } else if (e.code == 'invalid-email') {
+        throw AuthException(message: 'Digite um e-mail válido para continuar.');
       } else {
         throw AuthException(message: 'Erro ao tentar fazer a solicitação para trocar a senha.');
       }
