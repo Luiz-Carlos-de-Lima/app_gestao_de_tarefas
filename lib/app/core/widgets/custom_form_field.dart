@@ -61,7 +61,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(width: 2),
+                borderSide: BorderSide(width: 2, color: context.errorColor),
               ),
             ),
             validator: widget.validator,

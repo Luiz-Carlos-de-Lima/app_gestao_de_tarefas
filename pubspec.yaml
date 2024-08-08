@@ -39,6 +39,10 @@ dependencies:
   flutter_mobx: ^2.0.6+5
   google_fonts: ^6.2.1
   validatorless: ^1.2.3
+  firebase_core: ^3.3.0
+  firebase_auth: ^5.1.4
+  flutter_overlay_loader: ^2.0.0
+  notify_inapp: ^0.0.4
 
 dev_dependencies:
   flutter_test:

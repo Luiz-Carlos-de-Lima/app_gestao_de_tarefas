@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "887089998963",
+    "project_id": "app-gestao-de-tarefas-208d9",
+    "storage_bucket": "app-gestao-de-tarefas-208d9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887089998963:android:c8e375bda70b46d8f00e06",
+        "android_client_info": {
+          "package_name": "com.example.app_gestao_de_tarefas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZikCHkWpn0tizWS1iPaRh9dfPHHGa8Qo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

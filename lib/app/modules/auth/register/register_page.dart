@@ -1,10 +1,14 @@
 import 'package:app_gestao_de_tarefas/app/core/ui/theme_extension.dart';
 import 'package:app_gestao_de_tarefas/app/core/widgets/custom_form_field.dart';
+import 'package:app_gestao_de_tarefas/app/modules/auth/register/register_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:validatorless/validatorless.dart';
 
 import '../../../core/constants/routes.dart';
+import '../../../core/exceptions/auth_exception.dart';
+import '../../../core/ui/messages.dart';
 import '../../../core/widgets/todo_list_logo.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -15,6 +19,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _store = Modular.get<RegisterStore>();
   final _formKey = GlobalKey<FormState>();
   final _emailEC = TextEditingController();
   final _passwordEC = TextEditingController();
@@ -91,11 +96,24 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () async {
-                              // bool formIsValid = _formKey.currentState?.validate() ?? false;
+                              try {
+                                bool formIsValid = _formKey.currentState?.validate() ?? false;
 
-                              // if (formIsValid) {
-                              //   await context.read<LoginController>().login(email: _emailEC.text, password: _passwordEC.text);
-                              // }
+                                if (formIsValid) {
+                                  Loader.show(context);
+                                  await _store.register(email: _emailEC.text, password: _passwordEC.text);
+                                }
+                              } on AuthException catch (e) {
+                                if (context.mounted) {
+                                  Messages.of(context).showError(e.message);
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  Messages.of(context).showError('Ocorreu um erro desconhecido ao tentar registrar');
+                                }
+                              } finally {
+                                Loader.hide();
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: context.buttonColor,
